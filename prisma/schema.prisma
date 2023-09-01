@@ -76,9 +76,9 @@ model Order {
   status       orderStatus       @default(pending)
   createdAt             DateTime               @default(now())
 
-
    @@map("Order")
 }
+
 enum orderStatus {
   pending
   shipped
