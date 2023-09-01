@@ -1,16 +1,15 @@
+// books-route.ts
+
 import express from 'express';
-import {
-  createBookController,
-  deletedBook,
-  getASingleBook,
-  updatedBook,
-} from './books-controller';
+import * as booksController from './books-controller';
 
 const router = express.Router();
 
-router.post('/books/create-book', createBookController);
-router.get('/books/:id', getASingleBook);
-router.patch('/books/:id', updatedBook);
-router.delete('/books/:id', deletedBook);
+router.post('/books/create-book', booksController.createBookController);
+router.get('/books', booksController.getAllBooks);
+router.get('/books/:categoryId/category', booksController.getBooksByCategoryId);
+router.get('/books/:id', booksController.getASingleBook);
+router.patch('/books/:id', booksController.updatedBook);
+router.delete('/books/:id', booksController.deletedBook);
 
-export default router;
+export const booksRoutes = router;

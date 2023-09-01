@@ -1,0 +1,16 @@
+Fri Sep 01 2023 21:45:54 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.book.create()` invocation:
+
+{
+  data: {
+    title: "The Catcher in the Rye",
+    author: "J.D. Salinger",
+    genre: "Fiction",
+    price: 350.75,
+    publicationDate: "1951-07-16",
+                     ~~~~~~~~~~~~
+    categoryId: "f9f64eaf-5993-4e01-b16d-ae972a983e5d"
+  }
+}
+
+Invalid value for argument `publicationDate`: premature end of input. Expected ISO-8601 DateTime.

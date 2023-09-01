@@ -34,6 +34,16 @@
             "date": 1693571188221,
             "name": "D:\\Assignment-8\\logs\\winston\\successes\\phu-2023-01-09-18-success.log",
             "hash": "e9146b0f3dfd7b1ae6f7db044d20ff74daf761427503a095c9b5b76a8d8834c8"
+        },
+        {
+            "date": 1693583147709,
+            "name": "D:\\Assignment-8\\logs\\winston\\successes\\phu-2023-01-09-21-success.log",
+            "hash": "f8bc8ead245783a278c2365a6ee222087eefb94d7134098c68bb229db7879aac"
+        },
+        {
+            "date": 1693584670516,
+            "name": "D:\\Assignment-8\\logs\\winston\\successes\\phu-2023-01-09-22-success.log",
+            "hash": "0164c381bcbc21168289b4cf4a6c543b8a2b8b603c1cf57e39a951fd00deaeb3"
         }
     ],
     "hashType": "sha256"
