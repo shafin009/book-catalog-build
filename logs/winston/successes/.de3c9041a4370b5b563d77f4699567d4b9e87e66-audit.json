@@ -59,6 +59,11 @@
             "date": 1693594985948,
             "name": "D:\\Assignment-8\\logs\\winston\\successes\\phu-2023-02-09-01-success.log",
             "hash": "22387641a53bfe9fef45bb823bfe4cbf36eba9c385cfb3c9319975fda6949b39"
+        },
+        {
+            "date": 1693598625234,
+            "name": "D:\\Assignment-8\\logs\\winston\\successes\\phu-2023-02-09-02-success.log",
+            "hash": "3c1dd456ff0a027de9bb2ae63a0c4d93180bf08ef264bb1a782c3cbaf72a9709"
         }
     ],
     "hashType": "sha256"
