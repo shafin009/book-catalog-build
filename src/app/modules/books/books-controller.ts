@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import * as booksService from './books-service';
@@ -21,48 +24,68 @@ export async function createBookController(
   }
 }
 
-export const getAllBooks = async (req: Request, res: Response) => {
+export async function getBooks(req: Request, res: Response) {
   try {
     const {
-      page,
-      size,
-      sortBy,
-      sortOrder,
+      page = 1,
+      size = 10,
+      sortBy = 'title',
+      sortOrder = 'asc',
       minPrice,
       maxPrice,
       category,
       search,
     } = req.query;
-    const { books, total } = await booksService.getAllBooks(
-      page,
-      size,
-      sortBy,
-      sortOrder,
-      minPrice,
-      maxPrice,
-      category,
-      search
+
+    const parsedMinPrice = minPrice
+      ? parseInt(minPrice as string, 10)
+      : undefined;
+    const parsedMaxPrice = maxPrice
+      ? parseInt(maxPrice as string, 10)
+      : undefined;
+
+    const booksResponse = await booksService.getAllBooks(
+      +page,
+      +size,
+      sortBy as string,
+      sortOrder as 'asc' | 'desc',
+      parsedMinPrice,
+      parsedMaxPrice,
+      category as string | undefined,
+      search as string | undefined
     );
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'Books fetched successfully',
-      meta: {
-        page: parseInt(page as string, 10),
-        size: parseInt(size as string, 10),
-        total,
-        totalPage: Math.ceil(total / parseInt(size as string, 10)),
-      },
-      data: books,
-    });
+
+    if (booksResponse) {
+      res.status(booksResponse.statusCode).json(booksResponse);
+    } else {
+      res.status(500).json({
+        success: false,
+        statusCode: 500,
+        message: 'Internal server error',
+        meta: {
+          page: 1,
+          size: 10,
+          total: 0,
+          totalPage: 0,
+        },
+        data: [],
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
       statusCode: 500,
       message: 'Internal server error',
+      meta: {
+        page: 1,
+        size: 10,
+        total: 0,
+        totalPage: 0,
+      },
+      data: [],
     });
   }
-};
+}
 
 export const getBooksByCategoryId = async (req: Request, res: Response) => {
   try {

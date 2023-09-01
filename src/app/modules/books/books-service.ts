@@ -14,84 +14,90 @@ export async function createBook(bookData: Book): Promise<Book> {
   return book;
 }
 
-export const getAllBooks = async (
-  page: any,
-  size: any,
-  sortBy: any,
-  sortOrder: any,
-  minPrice: any,
-  maxPrice: any,
-  category: any,
-  search: any
-) => {
+export async function getAllBooks(
+  page: number,
+  size: number,
+  sortBy: string,
+  sortOrder: 'asc' | 'desc' = 'asc',
+  minPrice: number | undefined,
+  maxPrice: number | undefined,
+  categoryId: string | undefined,
+  search: string | undefined
+) {
   try {
-    // Initialize filters object as an empty object
-    const filters: Prisma.BookWhereInput = {};
+    const skip = (page - 1) * size;
+    const orderBy: Prisma.SortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
 
-    // Apply filters based on query parameters
-    if (minPrice) {
-      filters.price = {
-        gte: parseFloat(minPrice),
-      };
+    const where: Prisma.BookWhereInput = {};
+
+    if (minPrice !== undefined || maxPrice !== undefined) {
+      where.price = {};
+      if (minPrice !== undefined) {
+        where.price.gte = minPrice;
+      }
+      if (maxPrice !== undefined) {
+        where.price.lte = maxPrice;
+      }
     }
-    if (maxPrice) {
-      filters.price = {
-        ...filters.price,
-        lte: parseFloat(maxPrice),
-      };
+
+    if (categoryId !== undefined) {
+      where.categoryId = categoryId;
     }
-    if (category) {
-      filters.categoryId = category;
-    }
-    if (search) {
-      filters.OR = [
+
+    if (search !== undefined) {
+      where.OR = [
         {
           title: {
             contains: search,
-            mode: 'insensitive', // Case-insensitive search
+            mode: 'insensitive',
           },
         },
         {
           author: {
             contains: search,
-            mode: 'insensitive', // Case-insensitive search
+            mode: 'insensitive',
           },
         },
         {
           genre: {
             contains: search,
-            mode: 'insensitive', // Case-insensitive search
+            mode: 'insensitive',
           },
         },
       ];
     }
 
-    // Apply sorting
-    const orderBy: Prisma.BookOrderByWithRelationInput = {};
-    if (sortBy && sortOrder) {
-      orderBy[sortBy] = sortOrder === 'asc' ? 'asc' : 'desc';
-    }
+    
+    const totalBooks = await prisma.book.count({ where });
 
-    // Calculate skip and take for pagination
-    const skip = (page - 1) * size;
-    const take = size;
+   
+    const totalPage = Math.ceil(totalBooks / size);
 
-    // Fetch books based on filters, sorting, pagination
     const books = await prisma.book.findMany({
-      where: filters,
-      orderBy,
+      where,
       skip,
-      take,
+      take: size,
+      orderBy: {
+        [sortBy]: orderBy,
+      },
     });
 
-    // Count the total number of books without pagination
-    const total = await prisma.book.count({ where: filters });
-
-    return { books, total };
+    return {
+      success: true,
+      statusCode: 200,
+      message: 'Books fetched successfully',
+      meta: {
+        page,
+        size,
+        total: totalBooks,
+        totalPage,
+      },
+      data: books,
+    };
   } catch (error) {
-    throw new Error('Error fetching books');
+    // Handle errors as needed
   }
-};
+}
 
 export const getBooksByCategoryId = async (
   categoryId: any,
