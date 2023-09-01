@@ -24,6 +24,11 @@
             "date": 1693562718294,
             "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-01-09-16-error.log",
             "hash": "f235b74422c68718b715b0a5ff2755ff314d79e5f0539915c3fe086b657cb769"
+        },
+        {
+            "date": 1693566002179,
+            "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-01-09-17-error.log",
+            "hash": "b3c3aca1a691cc1ddf3c7ebf21f441d59abab97f538f76bb015dc76be17c1107"
         }
     ],
     "hashType": "sha256"

@@ -38,6 +38,7 @@ model Category {
   id    String   @id @default(uuid())
   title String
   books Book[]
+    @@map("Category")
 }
 
 model Book {
@@ -51,6 +52,7 @@ model Book {
   category       Category     @relation(fields: [categoryId], references: [id])
   reviews        ReviewAndRating[]
   orderedBooks   OrderedBook[]
+   @@map("Book")
 }
 
 
@@ -62,7 +64,9 @@ model ReviewAndRating {
   bookId String
   user   User     @relation(fields: [userId], references: [id])
   book   Book     @relation(fields: [bookId], references: [id])
+   @@map("ReviewAndRating")
 }
+
 
 model Order {
   id           String       @id @default(uuid())
@@ -70,7 +74,10 @@ model Order {
   user         User         @relation(fields: [userId], references: [id])
   orderedBooks OrderedBook[]
   status       orderStatus       @default(pending)
-  createdAt    DateTime
+  createdAt             DateTime               @default(now())
+
+
+   @@map("Order")
 }
 enum orderStatus {
   pending
@@ -85,4 +92,5 @@ model OrderedBook {
   quantity Int
   order    Order  @relation(fields: [orderId], references: [id])
   book     Book   @relation(fields: [bookId], references: [id])
+   @@map("OrderedBook")
 }
