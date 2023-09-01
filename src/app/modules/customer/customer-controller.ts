@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import {
   createUser,
+  deleteUser,
   getAllUsers,
   getSingleUser,
   updateUser,
-  deleteUser,
 } from './customer-service';
 
 export async function signUp(req: Request, res: Response, next: NextFunction) {

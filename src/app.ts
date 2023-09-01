@@ -7,7 +7,6 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
 import { authRoutes } from './app/modules/auth/auth-route';
 import { customerRoutes } from './app/modules/customer/customer-route';
-import { profileRoutes } from './app/modules/profiles/profile-route';
 
 const app: Application = express();
 
@@ -20,7 +19,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1', customerRoutes);
 app.use('/api/v1', authRoutes);
-app.use('/api/v1', profileRoutes);
 
 //global error handler
 app.use(globalErrorHandler);
