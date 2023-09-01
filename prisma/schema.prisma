@@ -23,7 +23,7 @@ model User {
   reviews    ReviewAndRating[]
 
 
-   @@map("user")
+   @@map("User")
 }
 
 enum UserRole {
@@ -31,8 +31,6 @@ enum UserRole {
   buyer
   customer
 }
-
-
 
 
 
