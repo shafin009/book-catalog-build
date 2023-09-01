@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient,User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
