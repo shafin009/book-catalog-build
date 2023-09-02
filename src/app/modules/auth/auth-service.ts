@@ -1,51 +1,69 @@
-import { PrismaClient } from '@prisma/client';
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
-import {
-  ILoginUser,
-  ILoginUserResponse,
-  IRefreshTokenResponse,
-} from './auth-interface';
+import prisma from '../../../shared/prisma';
+import { ILoginUser, ILoginUserResponse } from './auth-interface';
 
-const prisma = new PrismaClient();
+export const insertIntoDB = async (payload: User) => {
+  const isExist = await prisma.user.findFirst({
+    where: {
+      email: payload.email,
+    },
+  });
+  if (isExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Already exist this email');
+  }
+  const hashedPassword = await bcrypt.hash(payload.password, 10);
+  const result = await prisma.user.create({
+    data: {
+      ...payload,
+      password: hashedPassword,
+    },
+  });
+  if (!result) {
+    throw new ApiError(404, 'Something Went wrong');
+  }
 
+  const { password, ...userWithoutPassword } = result;
+
+  return userWithoutPassword;
+};
 const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { email, password } = payload;
 
-  const myUser = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       email,
     },
-    select: {
-      email: true,
-      password: true,
-      role: true,
-    },
   });
 
-  if (!myUser) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User is not found');
+  if (!user) {
+    throw new ApiError(404, 'User does not exist');
   }
 
-  const isPasswordValid = await bcrypt.compare(password, myUser.password);
+  const isPasswordMatched = await bcrypt.compare(password, user.password);
 
-  if (!isPasswordValid) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password does not match');
+  if (!isPasswordMatched) {
+    throw new Error('Incorrect password');
   }
 
-  const { email: userEmail, role } = myUser;
+  //create access token & refresh token
 
   const accessToken = jwtHelpers.createToken(
-    { userEmail, role },
+    { email: user.email, role: user.role, id: user.id },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string
   );
+
+  //Create refresh token
   const refreshToken = jwtHelpers.createToken(
-    { userEmail, role },
+    { email: user.email, role: user.role, id: user.id },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string
   );
@@ -55,39 +73,7 @@ const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     refreshToken,
   };
 };
-
-const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
-  let verifiedToken = null;
-
-  try {
-    verifiedToken = jwtHelpers.verifyToken(
-      token,
-      config.jwt.refresh_secret as Secret
-    );
-  } catch (err) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Invalid Refresh Token');
-  }
-
-  const { userEmail } = verifiedToken;
-
-  const user = await prisma.user.findUnique({ where: { email: userEmail } });
-
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
-  }
-
-  const newAccessToken = jwtHelpers.createToken(
-    { email: user.email, role: user.role },
-    config.jwt.secret as Secret,
-    config.jwt.expires_in as string
-  );
-
-  return {
-    accessToken: newAccessToken,
-  };
-};
-
-export const authService = {
+export const AuthService = {
+  insertIntoDB,
   loginUser,
-  refreshToken,
 };

@@ -1,22 +1,10 @@
 /* eslint-disable no-undef */
 import { PrismaClient,User } from '@prisma/client';
-import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
 
 const prisma = new PrismaClient();
 
-export async function createUser(payload: User): Promise<User> {
-  const { password, ...userData } = payload;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
-      password: hashedPassword,
-      ...userData,
-    },
-  });
-  return user;
-}
 
 export async function getAllUsers() {
   const users = await prisma.user.findMany();

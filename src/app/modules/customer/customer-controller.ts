@@ -1,27 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import {
-  createUser,
   deleteUser,
   getAllUsers,
   getSingleUser,
   updateUser,
 } from './customer-service';
-
-export async function signUp(req: Request, res: Response, next: NextFunction) {
-  try {
-    const payload = req.body;
-    const user = await createUser(payload);
-    res.status(httpStatus.OK).json({
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'User created successfully!',
-      data: user,
-    });
-  } catch (error) {
-    next(error);
-  }
-}
 
 export async function getUsers(
   req: Request,

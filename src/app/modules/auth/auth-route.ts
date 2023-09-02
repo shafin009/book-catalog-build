@@ -1,9 +1,9 @@
 import express from 'express';
-import { postAuth,  PostRefreshToken } from './auth-controller';
+import { AuthController } from './auth-controller';
 
 const router = express.Router();
 
-router.post('/auth/signin', postAuth);
-router.post('/auth/refresh-token', PostRefreshToken);
+router.post('/auth/signup', AuthController.insertIntoDB);
+router.post('/auth/signin', AuthController.loginUser);
 
 export const authRoutes = router;

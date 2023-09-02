@@ -64,6 +64,31 @@
             "date": 1693598625244,
             "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-02-09-02-error.log",
             "hash": "1c4d415b58af8a3ecba4db5ee4d38e2cf0d25298e2f5ce9a3c975fbe61b2a3da"
+        },
+        {
+            "date": 1693602030608,
+            "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-02-09-03-error.log",
+            "hash": "0722199c4571ad51070d2233d3a2b2c86efe974dde375592930fc23eb7254df2"
+        },
+        {
+            "date": 1693607632357,
+            "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-02-09-04-error.log",
+            "hash": "6752950624c076b1fc06475810ff97dec926e4b40be627c12248f19fe5cd537d"
+        },
+        {
+            "date": 1693609207766,
+            "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-02-09-05-error.log",
+            "hash": "2824193610873ebe583e2e47f023e8135bf4e38db843a5512717d15c79371310"
+        },
+        {
+            "date": 1693614457354,
+            "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-02-09-06-error.log",
+            "hash": "38f8538dcb2d57c9e9df41ee243bcbd4eaee01439d51a405e7a00082ff42cc14"
+        },
+        {
+            "date": 1693617350508,
+            "name": "D:\\Assignment-8\\logs\\winston\\errors\\phu-2023-02-09-07-error.log",
+            "hash": "1c7964152acb64e9ed9f74bd922663a2ebe95bc79ceb37f0e5be44d4b778c6fc"
         }
     ],
     "hashType": "sha256"

@@ -3,13 +3,12 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
-
 import cookieParser from 'cookie-parser';
 import { authRoutes } from './app/modules/auth/auth-route';
 import { booksRoutes } from './app/modules/books/books-route';
 import { categoryRoutes } from './app/modules/categories/category-route';
 import { customerRoutes } from './app/modules/customer/customer-route';
-
+import { OrderRoutes } from './app/modules/orders/order-route';
 
 const app: Application = express();
 
@@ -22,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/v1', customerRoutes);
 app.use('/api/v1', booksRoutes);
 app.use('/api/v1', categoryRoutes);
+app.use('/api/v1', OrderRoutes);
 app.use('/api/v1', authRoutes);
 
 app.use(globalErrorHandler);
