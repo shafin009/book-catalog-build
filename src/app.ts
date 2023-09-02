@@ -9,6 +9,7 @@ import { booksRoutes } from './app/modules/books/books-route';
 import { categoryRoutes } from './app/modules/categories/category-route';
 import { customerRoutes } from './app/modules/customer/customer-route';
 import { OrderRoutes } from './app/modules/orders/order-route';
+import { profileRoutes } from './app/modules/profiles/profile-route';
 
 const app: Application = express();
 
@@ -23,6 +24,7 @@ app.use('/api/v1', booksRoutes);
 app.use('/api/v1', categoryRoutes);
 app.use('/api/v1', OrderRoutes);
 app.use('/api/v1', authRoutes);
+app.use('/api/v1', profileRoutes);
 
 app.use(globalErrorHandler);
 

@@ -1,28 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import User from '../user/users-model';
 
-export async function getProfile(userPhoneNumber: string) {
-  const user = await User.findOne({ phoneNumber: userPhoneNumber });
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
+import prisma from '../../../shared/prisma';
 
-  if (!user) {
-    throw new Error('User not found');
+const getProfile = async (user: any | null) => {
+  const { id } = user;
+  const isExist = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-
-  const profile = {
-    name: user.name,
-    phoneNumber: user.phoneNumber,
-    address: user.address,
-  };
-
-  return profile;
-}
-
-export async function updateProfile(userPhoneNumber: string, updateData: any) {
-  const user = await User.findOneAndUpdate(
-    { phoneNumber: userPhoneNumber },
-    updateData,
-    { new: true }
-  );
-
-  return user;
-}
+  const result = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+export const ProfileService = {
+  getProfile,
+};

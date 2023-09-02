@@ -6,7 +6,7 @@ import { Book, Prisma, PrismaClient } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOption } from '../../../interfaces/pagination';
-import { BookSearchAbleFields } from './book-interface';
+import { BookSearchField } from './book-interface';
 
 const prisma = new PrismaClient();
 
@@ -117,7 +117,7 @@ export const getAllBook = async (
 
   if (search) {
     andConditions.push({
-      OR: BookSearchAbleFields.map(field => ({
+      OR: BookSearchField.map(field => ({
         [field]: {
           contains: search,
           mode: 'insensitive',

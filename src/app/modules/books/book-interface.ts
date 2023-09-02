@@ -4,11 +4,6 @@ export type IBookFilterRequest = {
   category: string | undefined;
 };
 
-export const BookSearchAbleFields = ['title', 'author', 'genre'];
+export const BookSearchField = ['title', 'author', 'genre'];
 
-export const BookFilterAbleFileds = [
-  'search',
-  'category',
-  'minPrice',
-  'maxPrice',
-];
+export const BookFilterField = ['search', 'category', 'minPrice', 'maxPrice'];

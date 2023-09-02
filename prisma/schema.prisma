@@ -28,7 +28,6 @@ model User {
 
 enum UserRole {
   admin
-  buyer
   customer
 }
 

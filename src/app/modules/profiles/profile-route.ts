@@ -1,22 +1,15 @@
 import express from 'express';
-import { ENUM_ROLE } from '../../../enum/user';
+
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
-import {
-  getProfileController,
-  updateProfileController,
-} from './profile-controller';
+import { getProfileController } from './profile-controller';
 
 const router = express.Router();
 
 router.get(
-  '/users/my-profile',
-  auth(ENUM_ROLE.BUYER, ENUM_ROLE.SELLER),
-  getProfileController
-);
-router.patch(
-  '/users/my-profile',
-  auth(ENUM_ROLE.BUYER, ENUM_ROLE.SELLER),
-  updateProfileController
+  '/profile',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
+  getProfileController,
 );
 
 export default router;

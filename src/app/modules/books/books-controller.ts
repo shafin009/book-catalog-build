@@ -9,7 +9,7 @@ import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import catchAsync from '../../../shared/catchAsync';
 import { Book } from '@prisma/client';
-import { BookFilterAbleFileds } from './book-interface';
+import { BookFilterField } from './book-interface';
 
 export async function createBookController(
   req: Request,
@@ -97,12 +97,12 @@ export const getBooksByCategoryId = catchAsync(async (req: Request, res: Respons
     statusCode: httpStatus.OK,
     success: true,
     message: 'Books with associated category data fetched successfully',
-    meta: result.meta,
-    data: result.data,
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 export const getAllBook = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, BookFilterAbleFileds);
+  const filters = pick(req.query, BookFilterField);
 
   const paginationOptions = pick(req.query, paginationFields);
   const result = await booksService.getAllBook(filters, paginationOptions);
@@ -110,7 +110,7 @@ export const getAllBook = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Book retrieved successful',
-    meta: result.meta,
-    data: result.data,
+    meta: result?.meta,
+    data: result?.data,
   });
 });
