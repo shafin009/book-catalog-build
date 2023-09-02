@@ -6,7 +6,7 @@ import * as booksController from './books-controller';
 const router = express.Router();
 
 router.post('/books/create-book', booksController.createBookController);
-router.get('/books', booksController.getBooks);
+router.get('/books', booksController.getAllBook);
 router.get('/books/:categoryId/category', booksController.getBooksByCategoryId);
 router.get('/books/:id', booksController.getASingleBook);
 router.patch('/books/:id', booksController.updatedBook);

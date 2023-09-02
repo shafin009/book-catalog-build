@@ -48,12 +48,12 @@ model Book {
   price          Float
   genre          String
   publicationDate DateTime
+  createdAt       DateTime @default(now())
   categoryId     String
   category       Category     @relation(fields: [categoryId], references: [id])
   reviews        ReviewAndRating[]
    @@map("Book")
 }
-
 
 model ReviewAndRating {
   id     String   @id @default(uuid())

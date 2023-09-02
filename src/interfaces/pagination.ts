@@ -1,17 +1,33 @@
-export type IPaginationOptions = {
+export type IPaginationOption = {
   page?: number;
-  size?: number; 
+  size?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
-  minPrice?: number; 
-  maxPrice?: number;
-  category?: string; 
-  search?: string; 
 };
+export type IGenericResponse<T> = {
+  meta: {
+    page: number;
+    size: number;
+    total: number;
+    totalPage: number;
+  };
+  data: T;
+};
+export type IAcademicSemesterFilters = {
+  searchTerm?: string;
+};
+import { SortOrder } from 'mongoose';
 
-export type BookFilterableFields = {
-  search?: string;
-  category?: string;
-  minPrice?: number;
-  maxPrice?: number;
+export type IOptions = {
+  page?: number;
+  size?: number;
+  sortBy?: string;
+  sortOrder?: SortOrder;
+};
+export type IOptionsResult = {
+  page: number;
+  size: number;
+  skip: number;
+  sortBy: string;
+  sortOrder: SortOrder;
 };

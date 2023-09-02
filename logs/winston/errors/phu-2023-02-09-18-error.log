@@ -1,0 +1,21 @@
+Sat Sep 02 2023 18:16:35 } [PH] error: 🐱‍🏍 globalErrorHandler ~~ 
+Invalid `prisma.order.create()` invocation:
+
+{
+  data: {
+    userId: "fabe5d2d-817e-4e6f-bf4c-b384d8d9fbdd",
+    orderedBooks: [
+      {
+        bookId: "4fc3c428-9579-4659-b256-1a8f76bd2a5d",
+        quantity: 3
+      },
+      {
+        bookId: "0bdf0245-5729-42ec-88ad-8b9d21e9b6ea",
+        quantity: 2
+      }
+    ],
++   createdAt: DateTime
+  }
+}
+
+Argument `createdAt` is missing.

@@ -4,6 +4,12 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import * as booksService from './books-service';
+import sendResponse from '../../../shared/sendResponse';
+import pick from '../../../shared/pick';
+import { paginationFields } from '../../../constants/pagination';
+import catchAsync from '../../../shared/catchAsync';
+import { Book } from '@prisma/client';
+import { BookFilterAbleFileds } from './book-interface';
 
 export async function createBookController(
   req: Request,
@@ -24,100 +30,6 @@ export async function createBookController(
   }
 }
 
-export async function getBooks(req: Request, res: Response) {
-  try {
-    const {
-      page = 1,
-      size = 10,
-      sortBy = 'title',
-      sortOrder = 'asc',
-      minPrice,
-      maxPrice,
-      category,
-      search,
-    } = req.query;
-
-    const parsedMinPrice = minPrice
-      ? parseInt(minPrice as string, 10)
-      : undefined;
-    const parsedMaxPrice = maxPrice
-      ? parseInt(maxPrice as string, 10)
-      : undefined;
-
-    const booksResponse = await booksService.getAllBooks(
-      +page,
-      +size,
-      sortBy as string,
-      sortOrder as 'asc' | 'desc',
-      parsedMinPrice,
-      parsedMaxPrice,
-      category as string | undefined,
-      search as string | undefined
-    );
-
-    if (booksResponse) {
-      res.status(booksResponse.statusCode).json(booksResponse);
-    } else {
-      res.status(500).json({
-        success: false,
-        statusCode: 500,
-        message: 'Internal server error',
-        meta: {
-          page: 1,
-          size: 10,
-          total: 0,
-          totalPage: 0,
-        },
-        data: [],
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      statusCode: 500,
-      message: 'Internal server error',
-      meta: {
-        page: 1,
-        size: 10,
-        total: 0,
-        totalPage: 0,
-      },
-      data: [],
-    });
-  }
-}
-
-export const getBooksByCategoryId = async (req: Request, res: Response) => {
-  try {
-    const { categoryId } = req.params;
-
-    const { page, size } = req.query;
-    const books = await booksService.getBooksByCategoryId(
-      categoryId,
-      page,
-      size
-    );
-
-    res.status(200).json({
-      success: true,
-      statusCode: 200,
-      message: 'Books with associated category data fetched successfully',
-      meta: {
-        page: 1,
-        size: 10,
-        total: books.length,
-        totalPage: Math.ceil(books.length / 10),
-      },
-      data: books,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      statusCode: 500,
-      message: 'Internal server error',
-    });
-  }
-};
 
 export const getASingleBook = async (req: Request, res: Response) => {
   try {
@@ -176,3 +88,29 @@ export const deletedBook = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getBooksByCategoryId = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await booksService.getBooksByCategoryId(id, paginationOptions);
+  sendResponse<Book[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Books with associated category data fetched successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+export const getAllBook = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, BookFilterAbleFileds);
+
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await booksService.getAllBook(filters, paginationOptions);
+  sendResponse<Book[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book retrieved successful',
+    meta: result.meta,
+    data: result.data,
+  });
+});
