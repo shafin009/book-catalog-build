@@ -8,7 +8,7 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
-import { ILoginUser, ILoginUserResponse } from './auth-interface';
+import { ILoginUser } from './auth-interface';
 
 export const insertIntoDB = async (payload: User) => {
   const isExist = await prisma.user.findFirst({
@@ -34,45 +34,31 @@ export const insertIntoDB = async (payload: User) => {
 
   return userWithoutPassword;
 };
-const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
+
+const loginUser = async (payload: ILoginUser) => {
   const { email, password } = payload;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (!user) {
-    throw new ApiError(404, 'User does not exist');
+  const isUserExist = await prisma.user.findFirst({ where: { email: email } });
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
 
-  const isPasswordMatched = await bcrypt.compare(password, user.password);
-
-  if (!isPasswordMatched) {
-    throw new Error('Incorrect password');
+  const isPasswordMatch = await bcrypt.compare(password, isUserExist.password);
+  if (!isPasswordMatch) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Password is incorrect');
   }
 
-  //create access token & refresh token
+  const { id: userId, role } = isUserExist;
 
   const accessToken = jwtHelpers.createToken(
-    { email: user.email, role: user.role, id: user.id },
+    { userId, role },
     config.jwt.secret as Secret,
-    config.jwt.expires_in as string
+    config.jwt.expires_in as string,
   );
 
-  //Create refresh token
-  const refreshToken = jwtHelpers.createToken(
-    { email: user.email, role: user.role, id: user.id },
-    config.jwt.refresh_secret as Secret,
-    config.jwt.refresh_expires_in as string
-  );
-
-  return {
-    accessToken,
-    refreshToken,
-  };
+  return accessToken;
 };
+
 export const AuthService = {
   insertIntoDB,
   loginUser,
