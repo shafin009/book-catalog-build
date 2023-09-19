@@ -52,26 +52,17 @@ const insertIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* ()
 exports.insertIntoDB = insertIntoDB;
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload;
-    const user = yield prisma_1.default.user.findUnique({
-        where: {
-            email,
-        },
-    });
-    if (!user) {
-        throw new ApiError_1.default(404, 'User does not exist');
+    const isUserExist = yield prisma_1.default.user.findFirst({ where: { email: email } });
+    if (!isUserExist) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User does not exist');
     }
-    const isPasswordMatched = yield bcrypt_1.default.compare(password, user.password);
-    if (!isPasswordMatched) {
-        throw new Error('Incorrect password');
+    const isPasswordMatch = yield bcrypt_1.default.compare(password, isUserExist.password);
+    if (!isPasswordMatch) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Password is incorrect');
     }
-    //create access token & refresh token
-    const accessToken = jwtHelpers_1.jwtHelpers.createToken({ email: user.email, role: user.role, id: user.id }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
-    //Create refresh token
-    const refreshToken = jwtHelpers_1.jwtHelpers.createToken({ email: user.email, role: user.role, id: user.id }, config_1.default.jwt.refresh_secret, config_1.default.jwt.refresh_expires_in);
-    return {
-        accessToken,
-        refreshToken,
-    };
+    const { id: userId, role } = isUserExist;
+    const accessToken = jwtHelpers_1.jwtHelpers.createToken({ userId, role }, config_1.default.jwt.secret, config_1.default.jwt.expires_in);
+    return accessToken;
 });
 exports.AuthService = {
     insertIntoDB: exports.insertIntoDB,

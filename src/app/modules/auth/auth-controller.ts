@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
+import myAuthResponse from '../../../shared/myAuthResponse';
 import sendResponse from '../../../shared/sendResponse';
 import { AuthService } from './auth-service';
 
@@ -18,7 +19,7 @@ const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.loginUser(req.body);
 
-  sendResponse(res, {
+  myAuthResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User login successfully!',

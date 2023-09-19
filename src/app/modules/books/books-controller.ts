@@ -93,7 +93,7 @@ export const getBooksByCategoryId = catchAsync(async (req: Request, res: Respons
   const { id } = req.params;
   const paginationOptions = pick(req.query, paginationFields);
   const result = await booksService.getBooksByCategoryId(id, paginationOptions);
-  sendResponse<Book[]>(res, {
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Books with associated category data fetched successfully',
